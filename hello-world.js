@@ -20,7 +20,6 @@ console.log("Hello World!");
 
 var i = 0;
 function timing(){
-     
      setTimeout(function(){
          i++;
          if( i < Infinity ){
@@ -31,3 +30,18 @@ function timing(){
 } 
 
 timing();
+
+// Ziad solution **************************************
+
+function setInterval(callback, milliseconds){
+    setTimeout(function(){
+        callback();
+        setInterval(callback, milliseconds);
+    }, milliseconds);
+}
+
+function logStuff() {
+    console.log('forever');
+}
+
+setInterval(logStuff(), 1000);
