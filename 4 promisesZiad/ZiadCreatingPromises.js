@@ -14,12 +14,12 @@ var p4 = p3.then(console.log);
 
 // 5. create a promise by calling the Promise constructor and passing an executor function
 var p5 = new Promise(function(resolve, reject) {
-  // if (Math.random() > 0.5) {
-  //   resolve(1);
-  // }
-  // else {
-  //   reject(new Error('too low'))
-  // }
+  if (Math.random() > 0.5) {
+    resolve(1);
+  }
+  else {
+    reject(new Error('too low'))
+  }
   setTimeout(function() {
     resolve()
   }, 1000)
