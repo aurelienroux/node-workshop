@@ -27,7 +27,6 @@ myProm
 });
 
 // ISS PROMISE 2nd VERSION ***********************************
-
 var promAgain = requestPromise(url);
 
 promAgain
@@ -40,3 +39,10 @@ promAgain
 .catch(function(err){
     console.log("this is error", err);
 });
+
+// ISS PROMISE 3rd VERSION ***********************************
+var issData = requestPromise(url);
+
+issData
+.then( data => console.log(JSON.parse(data)))
+.catch( err => console.log(err));

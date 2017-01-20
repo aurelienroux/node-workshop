@@ -1,5 +1,9 @@
 var requestPromise = require('request-promise');
 var promptPromise = require('prompt-promise');
+//DISTANCE MATH SNIPPET    
+    Number.prototype.toRadians = function() {
+    return this * Math.PI / 180;
+};
 
 // This function wraps the prompt library and re-uses it to return a promise for *one* answer
 function simplePrompt(question) {
@@ -26,20 +30,20 @@ function getCoordinatesPromise(city) {
 
 // This function returns a promise for the lat/lon content at the ISS API url
 function getIssPromise() {
-  return request('http://api.open-notify.org/iss-now.json')
+  return requestPromise('http://api.open-notify.org/iss-now.json')
   .then(function(result) {
     var issData = JSON.parse(result);
-    var issLat = (+issData.iss_position.latitude).toFixed(2);
-    var issLon = (+issData.iss_position.longitude).toFixed(2);
+    var issLat = (+issData.iss_position.latitude);
+    var issLon = (+issData.iss_position.longitude);
     return {lat: issLat, lon: issLon};
   });
 }
 
 // This function returns a promise for the distance from the user to the ISS
 function computeDistancePromise() {
-  var issPromise = getISSPromise();
+  var issPromise = getIssPromise();
   
-  var userPromise = simplePrompt('location')
+  var userPromise = simplePrompt('Where are you ? ')
   .then(getCoordinatesPromise);
 
   // Our function returns the result of Promise.all, which is itself a promise
@@ -54,6 +58,23 @@ function computeDistancePromise() {
 
     return calculateDistance(issResult.lat, issResult.lon, userResult.lat, userResult.lon);
   })
+  
+//CRAZY MATH DISTANCE CALCULATION
+function calculateDistance(issLat, issLon, userLat, userLon){
+  var R = 6371e3; // metres
+  var φ1 = userLat.toRadians();
+  var φ2 = issLat.toRadians();
+  var Δφ = (issLat-userLat).toRadians();
+  var Δλ = (issLon-userLon).toRadians();
+  
+  var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+          Math.cos(φ1) * Math.cos(φ2) *
+          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c;
+  
+  return (d/1000).toFixed(2);
+}
 
   // This is a manual way of synchronizing the two promises. It's ugly, long and not scalable.
   // issPromise.then(function(result) {

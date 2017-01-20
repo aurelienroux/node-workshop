@@ -2,10 +2,7 @@ const requestPromise = require("request-promise");
 const promptPromise = require("prompt-promise");
 const issUrl = "http://api.open-notify.org/iss-now.json";
 const userUrl = "https://maps.googleapis.com/maps/api/geocode/json?address=";
-var issLat;
-var issLon;
-var userLat;
-var userLon;
+var issLat, issLon, userLat, userLon;
 //DISTANCE MATH SNIPPET *****************************
     Number.prototype.toRadians = function() {
     return this * Math.PI / 180;
